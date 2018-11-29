@@ -1,2 +1,12 @@
  启动redis:  C:\redis 运行 cmd redis-server.exe
- 服务端访问: C:\redis 运行redis-cli
+ 服务端访问: C:\redis 运行cmd redis-cli.exe -h 127.0.0.1 -p 6379
+ 启动zkui: cd D:\zkui\zkui\target
+ 	java -jar zkui-2.0-SNAPSHOT-jar-with-dependencies.jar
+
+ com.example.demo.redisSecKill.LeguanLockTest  redis乐观锁实现
+ com.example.demo.redisSecKill.BeiguanLockTest  redis悲观锁实现
+
+
+
+
+

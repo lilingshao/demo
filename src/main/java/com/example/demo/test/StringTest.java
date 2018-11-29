@@ -26,6 +26,7 @@ public class StringTest {
         String p = new String("hello ");
         //通过反射修改hello的value值
         Field hello_field=String.class.getDeclaredField("value");
+        System.out.println(hello_field.getName()+"--"+hello_field.toString()+"--"+hello_field.getType());
         hello_field.setAccessible(true);
         char[] value=(char[])hello_field.get(hello);
         value[5]='_';
