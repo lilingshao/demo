@@ -2,18 +2,31 @@ package com.example.demo.test;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * 实现了阻塞的take和put方法的阻塞队列
  *      分别用synchronized 和 wait/notify 实现
- * @author xuexiaolei
- * @version 2017年11月01日
+ * @author lilei
+ * @version 2018年11月01日
  */
 public class MyBlocingQueue<E> {
     private final List list;
     private final int limit;//有大小限制的
+
+    /********************    下面是测试区       *********************************/
+    public static void main(String[] args) {
+        final MyBlocingQueue<Integer> myBlocingQueue = new MyBlocingQueue(10);
+        ExecutorService exec = Executors.newCachedThreadPool();
+        for (int i = 0; i < 100; i++) {
+            exec.execute(new TestRunnable(myBlocingQueue));
+        }
+        exec.shutdown();
+
+    }
 
     public MyBlocingQueue(int limit) {
         this.limit = limit;
@@ -75,16 +88,6 @@ public class MyBlocingQueue<E> {
         return remove;
     }
 
-
-    /********************    下面是测试区       *********************************/
-    public static void main(String[] args) {
-        final MyBlocingQueue<Integer> myBlocingQueue = new MyBlocingQueue(10);
-        ExecutorService exec = Executors.newCachedThreadPool();
-        for (int i = 0; i < 100; i++) {
-            exec.execute(new TestRunnable(myBlocingQueue));
-        }
-        exec.shutdown();
-    }
 
     static class TestRunnable implements Runnable{
         private final MyBlocingQueue<Integer> myBlocingQueue;

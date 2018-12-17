@@ -1,6 +1,7 @@
 package com.example.demo.test;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 public class StringTest {
     public static void main(String [] a) throws Exception{
@@ -41,6 +42,13 @@ public class StringTest {
         System.out.println(pp);
         System.out.println(p);
 
+        float f1 = 124.1f;
+        float f2 = 123.8f;
+        float fs = f1-f2;
+        System.out.println(fs);
+        BigDecimal bd = new BigDecimal(Float.toString(f1));
+        BigDecimal bd2 = new BigDecimal(Float.toString(f2));
+        System.out.println(bd.subtract(bd2).floatValue());
     }
 
 }

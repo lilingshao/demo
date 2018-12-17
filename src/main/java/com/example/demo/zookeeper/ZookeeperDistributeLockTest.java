@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class ZookeeperDistributeLock implements DistributedLock {
+public class ZookeeperDistributeLockTest implements DistributedLock {
 
-	private static Logger logger = LoggerFactory.getLogger(ZookeeperDistributeLock.class);
+	private static Logger logger = LoggerFactory.getLogger(ZookeeperDistributeLockTest.class);
 
 	public static void main(String[] args) throws IOException {
 		ZooKeeper zooKeeper = new ZooKeeper("127.0.0.1:2181", 60000, null);
-		ZookeeperDistributeLock myLock = new ZookeeperDistributeLock(zooKeeper, "/test", "lock-");
+		ZookeeperDistributeLockTest myLock = new ZookeeperDistributeLockTest(zooKeeper, "/test", "lock-");
 		while (true) {
 			try {
 				myLock.lock();
@@ -40,7 +40,7 @@ public class ZookeeperDistributeLock implements DistributedLock {
 	private String currentLockPath;// 用于保存某个客户端在locker下面创建成功的顺序节点，用于后续相关操作使用（如判断）
 	private static int MAX_RETRY_COUNT = 10;// 最大重试次数
 
-	public ZookeeperDistributeLock(ZooKeeper zookeeper, String rootPath, String lockNamePre) {
+	public ZookeeperDistributeLockTest(ZooKeeper zookeeper, String rootPath, String lockNamePre) {
 		logger.info("rootPath:{},lockNamePre:{}", rootPath, lockNamePre);
 		this.zooKeeper = zookeeper;
 		this.rootPath = rootPath;
