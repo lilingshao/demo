@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 基于zookeeper分布式锁实现
+ */
 public class ZookeeperDistributeLockTest implements DistributedLock {
 
 	private static Logger logger = LoggerFactory.getLogger(ZookeeperDistributeLockTest.class);
 
 	public static void main(String[] args) throws IOException {
 		ZooKeeper zooKeeper = new ZooKeeper("127.0.0.1:2181", 60000, null);
-		ZookeeperDistributeLockTest myLock = new ZookeeperDistributeLockTest(zooKeeper, "/test", "lock-");
+		ZookeeperDistributeLockTest myLock = new ZookeeperDistributeLockTest(zooKeeper, "/distrubute", "lock-");
 		while (true) {
 			try {
 				myLock.lock();
@@ -103,7 +106,6 @@ public class ZookeeperDistributeLockTest implements DistributedLock {
 	 * 
 	 * @param startMillis
 	 * @param millisToWait
-	 * @param ourPath
 	 * @return
 	 * @throws Exception
 	 */

@@ -6,9 +6,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 
 /**
+ * 分布式锁目前主流有三种:
+ * mysql(悲观锁/乐观锁)-->redis(getnx/get/setget)-->zookeeper(创建删除临时节点)
  * 基于Redis的SETNX操作实现的分布式锁
- * 
  * 获取锁时最好用lock(long time, TimeUnit unit), 以免网路问题而导致线程一直阻塞
+ * https://www.cnblogs.com/seesun2012/p/9214653.html
+ * 创建锁的服务器崩溃的话,因为设置有过期时间,过期自动删除
  */
 public class RedisBasedDistributedLock extends AbstractLock {
 
@@ -51,18 +54,22 @@ public class RedisBasedDistributedLock extends AbstractLock {
 			}
 
 			String value = jedis.get(lockKey);
-			if (value != null && isTimeExpired(value)) { // lock is expired
-				// 假设多个线程(非单jvm)同时走到这里
-				String oldValue = jedis.getSet(lockKey, stringOfLockExpireTime); //原子操作
-				// 但是走到这里时每个线程拿到的oldValue肯定不可能一样(因为getset是原子性的)
-				// 加入拿到的oldValue依然是expired的，那么就说明拿到锁了
-				if (oldValue != null && isTimeExpired(oldValue)) {
-					//成功获取到锁, 设置相关标识
-					locked = true;
-					setExclusiveOwnerThread(Thread.currentThread());
-					return true;
+			if (value != null)
+				if (isTimeExpired(value)) { // lock is expired
+					// 假设多个线程(非单jvm)同时走到这里
+					String oldValue = jedis.getSet(lockKey, stringOfLockExpireTime); //原子操作
+					// 但是走到这里时每个线程拿到的oldValue肯定不可能一样(因为getset是原子性的)
+					// 加入拿到的oldValue依然是expired的，那么就说明拿到锁了
+					if (oldValue != null && isTimeExpired(oldValue)) {
+						//成功获取到锁, 设置相关标识
+						locked = true;
+						setExclusiveOwnerThread(Thread.currentThread());
+						return true;
+					}
+				} else {
+					// TODO lock is not expired, enter next loop retrying
 				}
-			} else {
+			else {
 				// TODO lock is not expired, enter next loop retrying
 			}
 		}

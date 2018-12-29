@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.demo.dao.UserDao" >
     
-    <select id="getUsers" resultType="User" parameterType="map" >
+    <select id="getUsers" resultType="User" parameterType="com.example.demo.entity.User" >
         select id,name from user where id IN (${id})
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-        delete from user_t
+    <delete id="delUser" parameterType="java.lang.Integer" >
+        delete from user
         where id = #{id,jdbcType=INTEGER}
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.User" >

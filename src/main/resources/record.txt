@@ -1,10 +1,18 @@
- 启动redis:  C:\redis 运行 cmd redis-server.exe
- 服务端访问: C:\redis 运行cmd redis-cli.exe -h 127.0.0.1 -p 6379
+ 启动redis进入:  C:\redis 双击 redis-server.exe
+ 服务端访问进入: C:\redis cmd后输入(或者双击cli.exe文件): redis-cli.exe -h 127.0.0.1 -p 6379
+ > keys * 查看所有key,也可以模糊查询
+
  启动zkui: cd D:\zkui\zkui\target
  	java -jar zkui-2.0-SNAPSHOT-jar-with-dependencies.jar
+ 	浏览器输入: http://localhost:9090/login
+
+ 运行Nginx: cd C:\Windows\System32\cmd.exe -->dos窗口输入:nginx.exe 停止输入: nginx.exe -s stop
+    浏览器输入: http://localhost:8686/  表示成功!---已经配置到代理tomcat:8888
 
  com.example.demo.redisSecKill.LeguanLockTest  redis乐观锁实现
  com.example.demo.redisSecKill.BeiguanLockTest  redis悲观锁实现
+ com.example.demo.redisSecKill.RedisBasedDistributedLock  分布式锁redis实现
+ BaseDistributedLock 分布式锁zookeeper实现
 
 
 

@@ -1,5 +1,6 @@
-package com.example.demo.common;
+package com.example.demo.config;
 
+import com.example.demo.common.SessionInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;

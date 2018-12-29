@@ -84,13 +84,19 @@ public class ReportRestController extends BasicControllerSupport{
 	public String getTest(HttpServletResponse response){
 		return "index";
 	}
-	 @RequestMapping("/showUser")
-    public String showUser(Model model){
+
+	/**
+	 * 获得用户
+	 * @return
+	 * http://localhost:8070/demo/showUser?id=1
+	 */
+	@RequestMapping("/showUser")
+    public String showUser(User user){
 		System.out.println("88888888888");
-        Map<String,Object> params = getParameterMap();
-        System.out.println(params.toString());
-        params.put("id", "1,100");
-        List<User> list = this.userService.getUsers(params);
+		System.out.println(user.getId()==null?null:user.getId());
+		if(user.getId() ==null) user.setId(1);
+		System.out.println(user.getId());
+		List<User> list = this.userService.getUsers(user);
         String json = JSON.toJSONString(list);
         return json;
     }

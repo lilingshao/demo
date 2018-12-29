@@ -10,7 +10,7 @@ public class Synchr {
     static Map<String,String> map = new LinkedHashMap<>();
 
     public static void main(String [] a){
-        tent2();
+         tent2();
     }
     public static void addMap(){
         map.put("li","li");
