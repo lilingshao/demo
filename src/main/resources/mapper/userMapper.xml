@@ -10,10 +10,8 @@
         where id = #{id,jdbcType=INTEGER}
     </delete>
     <insert id="insert" parameterType="com.example.demo.entity.User" >
-        insert into user_t (id, user_name, password,
-        age)
-        values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
-        #{age,jdbcType=INTEGER})
+        insert into user_t (id, user_name, password,age)
+        values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},#{age,jdbcType=INTEGER})
     </insert>
     
 </mapper>

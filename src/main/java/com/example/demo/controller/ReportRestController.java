@@ -92,7 +92,7 @@ public class ReportRestController extends BasicControllerSupport{
 	 */
 	@RequestMapping("/showUser")
     public String showUser(User user){
-		System.out.println("88888888888");
+		System.out.println("555");
 		System.out.println(user.getId()==null?null:user.getId());
 		if(user.getId() ==null) user.setId(1);
 		System.out.println(user.getId());

@@ -43,6 +43,10 @@ public class RedisUtil {
 
 	}
 
+	/**
+	 * 获得jedis对象
+	 * @return
+	 */
 	public Jedis getJedis() {
 		Jedis jedis = pool.getResource();
 		return jedis;
@@ -53,13 +57,8 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过key获取储存在redis中的value
-	 * </p>
-	 * <p>
 	 * 并释放连接
-	 * </p>
-	 * 
 	 * @param key
 	 * @return 成功返回value 失败返回null
 	 */
@@ -78,13 +77,8 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 向redis存入key和value,并释放连接资源
-	 * </p>
-	 * <p>
 	 * 如果key已经存在 则覆盖
-	 * </p>
-	 * 
 	 * @param key
 	 * @param value
 	 * @return 成功 返回OK 失败返回 0
@@ -104,12 +98,9 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 删除指定的key,也可以传入一个包含key的数组
-	 * </p>
-	 * 
 	 * @param keys
-	 *            一个key 也可以使 string 数组
+	 * 一个key 也可以使 string 数组
 	 * @return 返回删除成功的个数
 	 */
 	public Long del(String... keys) {
@@ -127,10 +118,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过key向指定的value值追加值
-	 * </p>
-	 * 
 	 * @param key
 	 * @param str
 	 * @return 成功返回 添加后value的长度 失败 返回 添加的 value 的长度 异常返回0L
@@ -152,10 +140,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 判断key是否存在
-	 * </p>
-	 * 
 	 * @param key
 	 * @return true OR false
 	 */
@@ -174,10 +159,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 设置key value,如果key已经存在则返回0,nx==> not exist
-	 * </p>
-	 * 
 	 * @param key
 	 * @param value
 	 * @return 成功返回1 如果存在 和 发生异常 返回 0
@@ -197,14 +179,11 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 设置key value并制定这个键值的有效期
-	 * </p>
-	 * 
 	 * @param key
 	 * @param value
 	 * @param seconds
-	 *            单位:秒
+	 * 单位:秒
 	 * @return 成功返回OK 失败和异常返回null
 	 */
 	public String setex(String key, String value, int seconds) {
@@ -223,31 +202,13 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过key 和offset 从指定的位置开始将原先value替换
-	 * </p>
-	 * <p>
 	 * 下标从0开始,offset表示从offset下标开始替换
-	 * </p>
-	 * <p>
 	 * 如果替换的字符串长度过小则会这样
-	 * </p>
-	 * <p>
-	 * example:
-	 * </p>
-	 * <p>
 	 * value : bigsea@zto.cn
-	 * </p>
-	 * <p>
 	 * str : abc
-	 * </p>
-	 * <P>
 	 * 从下标7开始替换 则结果为
-	 * </p>
-	 * <p>
 	 * RES : bigsea.abc.cn
-	 * </p>
-	 * 
 	 * @param key
 	 * @param str
 	 * @param offset
@@ -269,10 +230,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过批量的key获取批量的value
-	 * </p>
-	 * 
 	 * @param keys
 	 *            string数组 也可以是一个key
 	 * @return 成功返回value的集合, 失败返回null的集合 ,异常返回空
@@ -293,16 +251,8 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 批量的设置key:value,可以一个
-	 * </p>
-	 * <p>
-	 * example:
-	 * </p>
-	 * <p>
 	 * obj.mset(new String[]{"key2","value1","key2","value2"})
-	 * </p>
-	 * 
 	 * @param keysvalues
 	 * @return 成功返回OK 失败 异常 返回 null
 	 *
@@ -832,12 +782,27 @@ public class RedisUtil {
 		}
 		return res;
 	}
+	/**
+	 * 存储REDIS队列 顺序存储
+	 * @param  key reids键名
+	 * @param  value 键值
+	 */
+	public static void lpush(byte[] key, byte[] value) {
+
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			jedis.lpush(key, value);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//返还到连接池
+			returnResource(pool, jedis);
+		}
+	}
 
 	/**
-	 * <p>
 	 * 通过key向list尾部添加字符串
-	 * </p>
-	 * 
 	 * @param key
 	 * @param strs
 	 *            可以使一个string 也可以使string数组
@@ -859,10 +824,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过key在list指定的位置之前或者之后 添加字符串元素
-	 * </p>
-	 * 
 	 * @param key
 	 * @param where
 	 *            LIST_POSITION枚举类型
@@ -888,13 +850,8 @@ public class RedisUtil {
 	}
 
 	/**
-	 * <p>
 	 * 通过key设置list指定下标位置的value
-	 * </p>
-	 * <p>
 	 * 如果下标超过list里面value的个数则报错
-	 * </p>
-	 * 
 	 * @param key
 	 * @param index
 	 *            从0开始
@@ -1012,7 +969,25 @@ public class RedisUtil {
 		}
 		return res;
 	}
-
+	/**
+	 * 获取队列数据
+	 * @param  key 键名
+	 * @return
+	 */
+	public static byte[] rpop(byte[] key) {
+		byte[] bytes = null;
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			bytes = jedis.rpop(key);
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			//返还到连接池
+			returnResource(pool, jedis);
+		}
+		return bytes;
+	}
 	/**
 	 * <p>
 	 * 通过key从一个list的尾部删除一个value并添加到另一个list的头部,并返回该value
