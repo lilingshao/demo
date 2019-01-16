@@ -11,7 +11,8 @@ public class StringTest {
 //        reflTest();
 //        floatTest();
 //        finalStringTest();
-        strsub();
+//        strsub();
+        System.out.println(tetException());
     }
     public static void reflTest() throws Exception{
         String xx=new String("hello world");
@@ -89,5 +90,16 @@ public class StringTest {
         ss = ss.substring(0,ss.indexOf(";")+1);
         System.out.println(ss);
     }
+    public static int tetException(){
+        try {
+            Integer.parseInt("jj");
+            return 0;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 1;
+        } finally {
+            return 2;
+        }
 
+    }
 }
