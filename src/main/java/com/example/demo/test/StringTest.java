@@ -99,5 +99,16 @@ public class StringTest {
         ss = ss.substring(0,ss.indexOf(";")+1);
         System.out.println(ss);
     }
+    public static int tetException(){
+        try {
+            Integer.parseInt("jj");
+            return 0;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 1;
+        } finally {
+            return 2;
+        }
 
+    }
 }
