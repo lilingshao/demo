@@ -2,6 +2,7 @@ package com.example.demo.redisQuene;
 
 import com.example.demo.entity.User;
 import com.example.demo.redisSecKill.RedisUtil;
+import com.example.demo.utils.redis.RedisListUtil;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class RedisQueneTest {
 	static {
 		try {
 			init();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -26,7 +27,7 @@ public class RedisQueneTest {
 		for(int i=0;i<10;i++){
 			System.out.println("---------"+i);
 			User user = new User(i,"这是第 "+i+" 个内容");
-			RedisUtil.getInstance().lpush(redisKey,ObjectUtil.object2Bytes(user));
+			RedisListUtil.lpushByte("key",user);
 		}
 	}
 
@@ -34,14 +35,12 @@ public class RedisQueneTest {
 	 * 取数据
 	 * @throws Exception
 	 */
-	private static void pop() throws Exception {
+	private void pop() throws Exception {
 		while (true){
-			byte[] bytes = RedisUtil.getInstance().rpop(redisKey);
-			if(bytes!=null && bytes.length>0){
-				User msg = (User) ObjectUtil.bytes2Object(bytes);
-				if (msg != null) {
-					System.out.println(msg.getId() + "----" + msg.getName());
-				}
+			User msg = null;
+			msg = (User) RedisListUtil.rpopByte("key");
+			if(msg != null){
+				System.out.println(Thread.currentThread().getName()+"===="+msg.getId() + "----" + msg.getName());
 			}else{
 				break;
 			}
@@ -49,11 +48,29 @@ public class RedisQueneTest {
 	}
 
 	public static void main(String[] args) {
-		try {
-			pop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Runnable runnable1 = new Runnable() {
+			@Override public void run() {
+				try {
+					new RedisQueneTest().pop();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		Runnable runnable2 = new Runnable() {
+			@Override public void run() {
+				try {
+					new RedisQueneTest().pop();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		Thread t1 = new Thread(runnable1, "t1");
+		Thread t2 = new Thread(runnable2, "t2");
+		t1.start();
+		t2.start();
 	}
 
 }

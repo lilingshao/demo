@@ -7,11 +7,19 @@ public class StringTest {
 
     public static void main(String [] a) throws Exception{
 //        internTest();
-//        stringTest();
+        stringTest();
 //        reflTest();
 //        floatTest();
 //        finalStringTest();
-        strsub();
+//        strsub();
+//        bufferTest();
+    }
+    public static void bufferTest(){
+        StringBuffer sb= new StringBuffer();
+        sb.append("123");
+        if(sb.toString()==null) System.out.println("null");
+        else System.out.println("=="+sb.toString());
+        System.out.println(sb.length());
     }
     public static void reflTest() throws Exception{
         String xx=new String("hello world");
@@ -68,11 +76,13 @@ public class StringTest {
         System.out.println(ss1==ss);
     }
     public static void stringTest(){
-        String m = "12";
+        String m = "123456";
         String n = new String(m);
-        String v = new String("12");
+        String v = new String("123456");
         System.out.println(m==n);
         System.out.println(m==v);
+        refString(m);
+        System.out.println(m+"----"+v);
     }
 
     public static void floatTest(){

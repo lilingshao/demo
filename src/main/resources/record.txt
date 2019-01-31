@@ -1,12 +1,13 @@
- 启动redis进入:  C:\redis 双击 redis-server.exe
+启动redis进入:  C:\redis 双击 redis-server.exe
  服务端访问进入: C:\redis cmd后输入(或者双击cli.exe文件): redis-cli.exe -h 127.0.0.1 -p 6379
  > keys * 查看所有key,也可以模糊查询
 
- 启动zkui: cd D:\zkui\zkui\target
+启动zkui: cd D:\workSoft\zkui\target
  	java -jar zkui-2.0-SNAPSHOT-jar-with-dependencies.jar
- 	浏览器输入: http://localhost:9090/login
+ 	浏览器输入: http://localhost:9090/login   -- admin manager
+ 	config.cfg文件中配置了，zkui需要连接的zookeeper集群的IP地址和端口，访问ui的用户名和密码
 
- 运行Nginx: cd C:\Windows\System32\cmd.exe -->dos窗口输入:nginx.exe 停止输入: nginx.exe -s stop
+运行Nginx: cd C:\Windows\System32\cmd.exe -->dos窗口输入:nginx.exe 停止输入: nginx.exe -s stop
     浏览器输入: http://localhost:8686/  表示成功!---已经配置到代理tomcat:8888
 
  com.example.demo.redisSecKill.LeguanLockTest  redis乐观锁实现
@@ -14,7 +15,17 @@
  com.example.demo.redisSecKill.RedisBasedDistributedLock  分布式锁redis实现
  BaseDistributedLock 分布式锁zookeeper实现
 
-
+启动kafka:
+ 进去安装目录: D:\ProgramFiles\kafka\kafka_2.12-2.1.0
+ cmd命令行: 输入: .\bin\windows\kafka-server-start.bat .\config\server.properties
+ kafka可视化: cd : D:\ProgramFiles\kafka
+ 启动脚本:
+ java -cp KafkaOffsetMonitor-assembly-0.2.1.jar com.quantifind.kafka.offsetapp.OffsetGetterWeb --zk localhost:2181 --port 8088  --refresh 5.seconds --retain 1.days
+ 创建主题设置分区:
+ 进入: D:\ProgramFiles\kafka\kafka_2.12-2.1.0\bin\windows  然后cmd
+ kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 2 --topic test-partitions
+ 列出存在的主题:
+ kafka-topics.bat --list --zookeeper localhost:2181
 
 
 
