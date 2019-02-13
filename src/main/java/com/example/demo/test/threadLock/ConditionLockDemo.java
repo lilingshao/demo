@@ -1,10 +1,13 @@
-package com.example.demo.test;
+package com.example.demo.test.threadLock;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-//参考链接: https://www.cnblogs.com/zouzz/p/6593748.html
+/**
+ * 参考链接: https://www.cnblogs.com/zouzz/p/6593748.html
+ * 公平锁条件队列
+ */
 public class ConditionLockDemo {
 	volatile int key = 0;
 	Lock l = new ReentrantLock();

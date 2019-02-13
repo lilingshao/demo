@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.test.threadLock;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

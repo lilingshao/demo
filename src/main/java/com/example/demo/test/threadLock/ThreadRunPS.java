@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.test.threadLock;
 
 
 public class ThreadRunPS extends Thread {

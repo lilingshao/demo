@@ -7,10 +7,10 @@ public class StringTest {
 
     public static void main(String [] a) throws Exception{
 //        internTest();
-        stringTest();
+//        stringTest();
 //        reflTest();
 //        floatTest();
-//        finalStringTest();
+        finalStringTest();
 //        strsub();
 //        bufferTest();
     }
@@ -45,13 +45,15 @@ public class StringTest {
     public static void finalStringTest(){
         final String tt = "hello world";
         String ttt = "hello world";
-        System.out.println(tt==ttt);
+        System.out.println("开始------"); //true
+        System.out.println(tt==ttt); //true
         String ht = tt+ttt;
-        refString(ttt);
-        System.out.println("ht=="+ht);
-        System.out.println("tt=="+tt);
-        System.out.println("ttt=="+ttt);
-        System.out.println(tt+ttt);
+        refString(tt);
+        System.out.println("ht=="+ht); //ht==hello worldhello world
+        System.out.println("tt=="+tt);  //tt==hello world
+        System.out.println("ttt=="+ttt); //ttt==hello_world
+        System.out.println(tt+"---"+ttt); //hello world---hello_world
+        System.out.println(tt==ttt); //true 明明上面打印的不一样,还是true
     }
     public static void refString(String str){
         //通过反射修改hello的value值
@@ -72,27 +74,27 @@ public class StringTest {
         String s2 = "a123"+",123";
         String ss = new String("a123").intern();
         String ss1 = "a123";
-        System.out.println(s2==s);
-        System.out.println(ss1==ss);
+        System.out.println(s2==s); //true
+        System.out.println(ss1==ss); //true
     }
     public static void stringTest(){
         String m = "123456";
         String n = new String(m);
         String v = new String("123456");
-        System.out.println(m==n);
-        System.out.println(m==v);
+        System.out.println(m==n); //false
+        System.out.println(m==v); //false
         refString(m);
-        System.out.println(m+"----"+v);
+        System.out.println(m+"----"+v); //12345_----12345_
     }
 
     public static void floatTest(){
         float f1 = 124.1f;
         float f2 = 123.8f;
         float fs = f1-f2;//相减默认是的double类型
-        System.out.println(fs);
+        System.out.println(fs); //0.29999542
         BigDecimal bd = new BigDecimal(Float.toString(f1));
         BigDecimal bd2 = new BigDecimal(Float.toString(f2));
-        System.out.println(bd.subtract(bd2).floatValue());
+        System.out.println(bd.subtract(bd2).floatValue());//0.3
     }
     public static void strsub(){
         String ss = "12345;6789";
