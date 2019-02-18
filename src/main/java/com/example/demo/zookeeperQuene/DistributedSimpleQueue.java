@@ -12,88 +12,90 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * ·Ö²¼Ê½¶ÓÁĞ£¬Éú²úÕß£¬Ïû·ÑÕßµÄÊµÏÖ
+ * åˆ†å¸ƒå¼é˜Ÿåˆ—ï¼Œç”Ÿäº§è€…ï¼Œæ¶ˆè´¹è€…çš„å®ç°
  * @author linbingwen
- *
+ *å…ˆè¿›å…ˆå‡ºé˜Ÿåˆ—
+ * åœ¨zookeeperä¸­å…ˆåˆ›å»ºä¸€ä¸ªæ ¹ç›®å½• queue_fifoï¼Œåšä¸ºé˜Ÿåˆ—ã€‚å…¥é˜Ÿæ“ä½œå°±æ˜¯åœ¨queue_fifoä¸‹åˆ›å»ºè‡ªå¢åºçš„å­èŠ‚ç‚¹ï¼Œ
+ * å¹¶æŠŠæ•°æ®æ”¾å…¥èŠ‚ç‚¹å†…ã€‚å‡ºé˜Ÿæ“ä½œå°±æ˜¯å…ˆæ‰¾åˆ°queue_fifoä¸‹åºå·æœ€ä¸‹çš„é‚£ä¸ªèŠ‚ç‚¹ï¼Œå–å‡ºæ•°æ®ï¼Œç„¶ååˆ é™¤æ­¤èŠ‚ç‚¹ã€‚
  * @param <T>
  */
 public class DistributedSimpleQueue<T> {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseDistributedLock.class);
 
-	protected final ZkClient zkClient;//ÓÃÓÚ²Ù×÷zookeeper¼¯Èº
-	protected final String root;//´ú±í¸ù½Úµã
+	protected final ZkClient zkClient;//ç”¨äºæ“ä½œzookeeperé›†ç¾¤
+	protected final String root;//ä»£è¡¨æ ¹èŠ‚ç‚¹
 
-	protected static final String Node_NAME = "n_";//Ë³Ğò½ÚµãµÄÃû³Æ
-	
+	protected static final String Node_NAME = "n_";//é¡ºåºèŠ‚ç‚¹çš„åç§°
+
 
 
 	public DistributedSimpleQueue(ZkClient zkClient, String root) {
 		this.zkClient = zkClient;
 		this.root = root;
 	}
-    
-	//»ñÈ¡¶ÓÁĞµÄ´óĞ¡
+
+	//è·å–é˜Ÿåˆ—çš„å¤§å°
 	public int size() {
 		/**
-		 * Í¨¹ı»ñÈ¡¸ù½ÚµãÏÂµÄ×Ó½ÚµãÁĞ±í
+		 * é€šè¿‡è·å–æ ¹èŠ‚ç‚¹ä¸‹çš„å­èŠ‚ç‚¹åˆ—è¡¨
 		 */
 		return zkClient.getChildren(root).size();
 	}
-	
-    //ÅĞ¶Ï¶ÓÁĞÊÇ·ñÎª¿Õ
+
+	//åˆ¤æ–­é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
 	public boolean isEmpty() {
 		return zkClient.getChildren(root).size() == 0;
 	}
-	
+
 	/**
-	 * Ïò¶ÓÁĞÌá¹©Êı¾İ
+	 * å‘é˜Ÿåˆ—æä¾›æ•°æ®
 	 * @param element
 	 * @return
 	 * @throws Exception
 	 */
-    public boolean offer(T element) throws Exception{
-    	
-    	//¹¹½¨Êı¾İ½ÚµãµÄÍêÕûÂ·¾¶
-    	String nodeFullPath = root .concat( "/" ).concat( Node_NAME );
-    	System.out.println(nodeFullPath);
-        try {
-        	//´´½¨³Ö¾ÃµÄ½Úµã£¬Ğ´ÈëÊı¾İ
-            String tt = zkClient.createPersistentSequential(nodeFullPath , element);
-            System.out.println("tt=="+tt);
-        }catch (ZkNoNodeException e) {
-        	zkClient.createPersistent(root);
-        	offer(element);
-        } catch (Exception e) {
-            throw ExceptionUtil.convertToRuntimeException(e);
-        }
-        return true;
-    }
+	public boolean offer(T element) throws Exception{
+
+		//æ„å»ºæ•°æ®èŠ‚ç‚¹çš„å®Œæ•´è·¯å¾„
+		String nodeFullPath = root .concat( "/" ).concat( Node_NAME );
+		System.out.println(nodeFullPath);
+		try {
+			//åˆ›å»ºæŒä¹…çš„èŠ‚ç‚¹ï¼Œå†™å…¥æ•°æ®
+			String tt = zkClient.createPersistentSequential(nodeFullPath , element);
+			System.out.println("tt=="+tt);
+		}catch (ZkNoNodeException e) {
+			zkClient.createPersistent(root);
+			offer(element);
+		} catch (Exception e) {
+			throw ExceptionUtil.convertToRuntimeException(e);
+		}
+		return true;
+	}
 
 
-    //´Ó¶ÓÁĞÈ¡Êı¾İ
+	//ä»é˜Ÿåˆ—å–æ•°æ®
 	@SuppressWarnings("unchecked")
 	public T poll() throws Exception {
-		
+
 		try {
 
 			List<String> list = zkClient.getChildren(root);
 			if (list.size() == 0) {
 				return null;
 			}
-			//½«¶ÓÁĞ°´ÕÕÓÉĞ¡µ½´óµÄË³ĞòÅÅĞò
+			//å°†é˜Ÿåˆ—æŒ‰ç…§ç”±å°åˆ°å¤§çš„é¡ºåºæ’åº
 			Collections.sort(list, new Comparator<String>() {
 				public int compare(String lhs, String rhs) {
 					return getNodeNumber(lhs, Node_NAME).compareTo(getNodeNumber(rhs, Node_NAME));
 				}
 			});
-			
+
 			/**
-			 * ½«¶ÓÁĞÖĞµÄÔªËØ×öÑ­»·£¬È»ºó¹¹½¨ÍêÕûµÄÂ·¾¶£¬ÔÚÍ¨¹ıÕâ¸öÂ·¾¶È¥¶ÁÈ¡Êı¾İ
+			 * å°†é˜Ÿåˆ—ä¸­çš„å…ƒç´ åšå¾ªç¯ï¼Œç„¶åæ„å»ºå®Œæ•´çš„è·¯å¾„ï¼Œåœ¨é€šè¿‡è¿™ä¸ªè·¯å¾„å»è¯»å–æ•°æ®
 			 */
 			for ( String nodeName : list ){
-				
-				String nodeFullPath = root.concat("/").concat(nodeName);	
+
+				String nodeFullPath = root.concat("/").concat(nodeName);
 				try {
 					T node = (T) zkClient.readData(nodeFullPath);
 					zkClient.delete(nodeFullPath);
@@ -102,16 +104,16 @@ public class DistributedSimpleQueue<T> {
 					logger.error("",e);
 				}
 			}
-			
+
 			return null;
-			
+
 		} catch (Exception e) {
 			throw ExceptionUtil.convertToRuntimeException(e);
 		}
 
 	}
 
-	
+
 	private String getNodeNumber(String str, String nodeName) {
 		int index = str.lastIndexOf(nodeName);
 		if (index >= 0) {

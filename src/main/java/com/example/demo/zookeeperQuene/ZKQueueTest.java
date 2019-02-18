@@ -30,9 +30,9 @@ class ConsumerThread implements Runnable {
 	public void run() {
 		for (int i = 0; i < 5; i++) {
 			try {
-				Thread.sleep((int) (Math.random() * 100));// Ëæ»úË¯ÃßÒ»ÏÂ
+				Thread.sleep((int) (Math.random() * 100));// éšæœºç¡çœ ä¸€ä¸‹
 				SendObject sendObject = (SendObject) queue.poll();
-				System.out.println("Ïû·ÑÒ»ÌõÏûÏ¢³É¹¦£º" + sendObject);
+				System.out.println("æ¶ˆè´¹ä¸€æ¡æ¶ˆæ¯æˆåŠŸï¼š" + sendObject);
 			} catch (Exception e) {
 			}
 		}
@@ -50,10 +50,10 @@ class ProducerThread implements Runnable {
 	public void run() {
 		for (int i = 0; i < 5; i++) {
 			try {
-				Thread.sleep((int) (Math.random() * 100));// Ëæ»úË¯ÃßÒ»ÏÂ
+				Thread.sleep((int) (Math.random() * 100));// éšæœºç¡çœ ä¸€ä¸‹
 				SendObject sendObject = new SendObject(String.valueOf(i), "content" + i);
 				queue.offer(sendObject);
-				System.out.println("·¢ËÍÒ»ÌõÏûÏ¢³É¹¦£º" + sendObject);
+				System.out.println("å‘é€ä¸€æ¡æ¶ˆæ¯æˆåŠŸï¼š" + sendObject);
 			} catch (Exception e) {
 			}
 		}

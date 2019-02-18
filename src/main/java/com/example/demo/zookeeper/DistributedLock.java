@@ -5,23 +5,23 @@ import java.util.concurrent.TimeUnit;
 public interface DistributedLock {
 
 	/**
-	 * ³¢ÊÔ»ñÈ¡Ëø,²»½øĞĞµÈ´ı¡£µÃµ½·µ»Øtrue,
-	 * 
+	 * å°è¯•è·å–é”,ä¸è¿›è¡Œç­‰å¾…ã€‚å¾—åˆ°è¿”å›true,
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	public boolean tryLock() throws Exception;
 
 	/**
-	 * ×èÈûµÈ´ı»ñÈ¡Ëø
-	 * 
+	 * é˜»å¡ç­‰å¾…è·å–é”
+	 *
 	 * @throws Exception
 	 */
 	public void lock() throws Exception;
 
 	/**
-	 * ÔÚ¹æ¶¨Ê±¼äÄÚµÈ´ı»ñÈ¡Ëø
-	 * 
+	 * åœ¨è§„å®šæ—¶é—´å†…ç­‰å¾…è·å–é”
+	 *
 	 * @param time
 	 * @param unit
 	 * @return
@@ -30,8 +30,8 @@ public interface DistributedLock {
 	public boolean lock(long time, TimeUnit unit) throws Exception;
 
 	/**
-	 * ÊÍ·ÅËø
-	 * 
+	 * é‡Šæ”¾é”
+	 *
 	 * @throws Exception
 	 */
 	public void unLock() throws Exception;

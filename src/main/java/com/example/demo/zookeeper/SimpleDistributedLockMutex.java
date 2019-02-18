@@ -9,72 +9,72 @@ package com.example.demo.zookeeper;
 //import com.github.distribute.lock.DistributedLock;
 //
 ///**
-// * Ëø½Ó¿ÚµÄ¾ßÌåÊµÏÖ£¬Ö÷Òª½èÖúÓÚ¼Ì³ĞµÄ¸¸ÀàBaseDistributedLockÀ´ÊµÏÖµÄ½Ó¿Ú·½·¨ ¸Ã¸¸ÀàÊÇ»ùÓÚZookeeperÊµÏÖ·Ö²¼Ê½ËøµÄ¾ßÌåÏ¸½ÚÊµÏÖ
+// * é”æ¥å£çš„å…·ä½“å®ç°ï¼Œä¸»è¦å€ŸåŠ©äºç»§æ‰¿çš„çˆ¶ç±»BaseDistributedLockæ¥å®ç°çš„æ¥å£æ–¹æ³• è¯¥çˆ¶ç±»æ˜¯åŸºäºZookeeperå®ç°åˆ†å¸ƒå¼é”çš„å…·ä½“ç»†èŠ‚å®ç°
 // */
 //public class SimpleDistributedLockMutex extends BaseDistributedLock implements DistributedLock {
 //	/*
-//	 * ÓÃÓÚ±£´æZookeeperÖĞÊµÏÖ·Ö²¼Ê½ËøµÄ½Úµã£¬ÈçÃû³ÆÎªlocker£º/locker£¬
-//	 * ¸Ã½ÚµãÓ¦¸ÃÊÇ³Ö¾Ã½Úµã£¬ÔÚ¸Ã½ÚµãÏÂÃæ´´½¨ÁÙÊ±Ë³Ğò½ÚµãÀ´ÊµÏÖ·Ö²¼Ê½Ëø
+//	 * ç”¨äºä¿å­˜Zookeeperä¸­å®ç°åˆ†å¸ƒå¼é”çš„èŠ‚ç‚¹ï¼Œå¦‚åç§°ä¸ºlockerï¼š/lockerï¼Œ
+//	 * è¯¥èŠ‚ç‚¹åº”è¯¥æ˜¯æŒä¹…èŠ‚ç‚¹ï¼Œåœ¨è¯¥èŠ‚ç‚¹ä¸‹é¢åˆ›å»ºä¸´æ—¶é¡ºåºèŠ‚ç‚¹æ¥å®ç°åˆ†å¸ƒå¼é”
 //	 */
 //	private final String basePath;
 //
 //	/*
-//	 * ËøÃû³ÆÇ°×º£¬lockerÏÂ´´½¨µÄË³Ğò½ÚµãÀıÈç¶¼ÒÔlock-¿ªÍ·£¬ÕâÑù±ãÓÚ¹ıÂËÎŞ¹Ø½Úµã
-//	 * ÕâÑù´´½¨ºóµÄ½ÚµãÀàËÆ£ºlock-00000001£¬lock-000000002
+//	 * é”åç§°å‰ç¼€ï¼Œlockerä¸‹åˆ›å»ºçš„é¡ºåºèŠ‚ç‚¹ä¾‹å¦‚éƒ½ä»¥lock-å¼€å¤´ï¼Œè¿™æ ·ä¾¿äºè¿‡æ»¤æ— å…³èŠ‚ç‚¹
+//	 * è¿™æ ·åˆ›å»ºåçš„èŠ‚ç‚¹ç±»ä¼¼ï¼šlock-00000001ï¼Œlock-000000002
 //	 */
 //	private  static final String LOCK_NAME="lock-";
 //
-//	/* ÓÃÓÚ±£´æÄ³¸ö¿Í»§¶ËÔÚlockerÏÂÃæ´´½¨³É¹¦µÄË³Ğò½Úµã£¬ÓÃÓÚºóĞøÏà¹Ø²Ù×÷Ê¹ÓÃ£¨ÈçÅĞ¶Ï£© */
+//	/* ç”¨äºä¿å­˜æŸä¸ªå®¢æˆ·ç«¯åœ¨lockerä¸‹é¢åˆ›å»ºæˆåŠŸçš„é¡ºåºèŠ‚ç‚¹ï¼Œç”¨äºåç»­ç›¸å…³æ“ä½œä½¿ç”¨ï¼ˆå¦‚åˆ¤æ–­ï¼‰ */
 //	private String ourLockPath;
 //
 //	/**
-//	 * ÓÃÓÚ»ñÈ¡Ëø×ÊÔ´£¬Í¨¹ı¸¸ÀàµÄ»ñÈ¡Ëø·½·¨À´»ñÈ¡Ëø
-//	 * 
-//	 * @param time»ñÈ¡ËøµÄ³¬Ê±Ê±¼ä
+//	 * ç”¨äºè·å–é”èµ„æºï¼Œé€šè¿‡çˆ¶ç±»çš„è·å–é”æ–¹æ³•æ¥è·å–é”
+//	 *
+//	 * @param timeè·å–é”çš„è¶…æ—¶æ—¶é—´
 //	 * @param unit
-//	 *            timeµÄÊ±¼äµ¥Î»
-//	 * @returnÊÇ·ñ»ñÈ¡µ½Ëø
+//	 *            timeçš„æ—¶é—´å•ä½
+//	 * @returnæ˜¯å¦è·å–åˆ°é”
 //	 * @throws Exception
 //	 */
 //	private boolean internalLock(long time, TimeUnit unit) throws Exception {
-//		// Èç¹ûourLockPath²»Îª¿ÕÔòÈÏÎª»ñÈ¡µ½ÁËËø£¬¾ßÌåÊµÏÖÏ¸½Ú¼ûattemptLockµÄÊµÏÖ
+//		// å¦‚æœourLockPathä¸ä¸ºç©ºåˆ™è®¤ä¸ºè·å–åˆ°äº†é”ï¼Œå…·ä½“å®ç°ç»†èŠ‚è§attemptLockçš„å®ç°
 //		ourLockPath = attemptLock(time, unit);
 //		return ourLockPath != null;
 //	}
 //
 //	/**
-//	 * ´«ÈëZookeeper¿Í»§¶ËÁ¬½Ó¶ÔÏó£¬ºÍbasePath
-//	 * 
+//	 * ä¼ å…¥Zookeeperå®¢æˆ·ç«¯è¿æ¥å¯¹è±¡ï¼Œå’ŒbasePath
+//	 *
 //	 * @param client
-//	 *            Zookeeper¿Í»§¶ËÁ¬½Ó¶ÔÏó
+//	 *            Zookeeperå®¢æˆ·ç«¯è¿æ¥å¯¹è±¡
 //	 * @param basePath
-//	 *            basePathÊÇÒ»¸ö³Ö¾Ã½Úµã
+//	 *            basePathæ˜¯ä¸€ä¸ªæŒä¹…èŠ‚ç‚¹
 //	 */
 //	public SimpleDistributedLockMutex(ZkClient client, String basePath) {
 //		/*
-//		 * µ÷ÓÃ¸¸ÀàµÄ¹¹Ôì·½·¨ÔÚZookeeperÖĞ´´½¨basePath½Úµã£¬²¢ÇÒÎªbasePath½Úµã×Ó½ÚµãÉèÖÃÇ°×º
-//		 * Í¬Ê±±£´æbasePathµÄÒıÓÃ¸øµ±Ç°ÀàÊôĞÔ
+//		 * è°ƒç”¨çˆ¶ç±»çš„æ„é€ æ–¹æ³•åœ¨Zookeeperä¸­åˆ›å»ºbasePathèŠ‚ç‚¹ï¼Œå¹¶ä¸”ä¸ºbasePathèŠ‚ç‚¹å­èŠ‚ç‚¹è®¾ç½®å‰ç¼€
+//		 * åŒæ—¶ä¿å­˜basePathçš„å¼•ç”¨ç»™å½“å‰ç±»å±æ€§
 //		 */
 //		super(client, basePath, LOCK_NAME);
 //		this.basePath = basePath;
 //	}
 //
-//	/** »ñÈ¡Ëø£¬Ö±µ½³¬Ê±£¬³¬Ê±ºóÅ×³öÒì³£ */
+//	/** è·å–é”ï¼Œç›´åˆ°è¶…æ—¶ï¼Œè¶…æ—¶åæŠ›å‡ºå¼‚å¸¸ */
 //	public void acquire() throws Exception {
-//		// -1±íÊ¾²»ÉèÖÃ³¬Ê±Ê±¼ä£¬³¬Ê±ÓÉZookeeper¾ö¶¨
+//		// -1è¡¨ç¤ºä¸è®¾ç½®è¶…æ—¶æ—¶é—´ï¼Œè¶…æ—¶ç”±Zookeeperå†³å®š
 //		if (!internalLock(-1, null)) {
-//			throw new IOException("Á¬½Ó¶ªÊ§!ÔÚÂ·¾¶:'" + basePath + "'ÏÂ²»ÄÜ»ñÈ¡Ëø!");
+//			throw new IOException("è¿æ¥ä¸¢å¤±!åœ¨è·¯å¾„:'" + basePath + "'ä¸‹ä¸èƒ½è·å–é”!");
 //		}
 //	}
 //
 //	/**
-//	 * »ñÈ¡Ëø£¬´øÓĞ³¬Ê±Ê±¼ä
+//	 * è·å–é”ï¼Œå¸¦æœ‰è¶…æ—¶æ—¶é—´
 //	 */
 //	public boolean acquire(long time, TimeUnit unit) throws Exception {
 //		return internalLock(time, unit);
 //	}
 //
-//	/** ÊÍ·ÅËø */
+//	/** é‡Šæ”¾é” */
 //	public void release() throws Exception {
 //		releaseLock(ourLockPath);
 //	}

@@ -47,7 +47,7 @@ public class ProduceController {
         return result.toJSONString();
     }
     //使用一个定时任务，每隔10秒发送一条消息
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void send(){
         JSONObject result = new JSONObject();
         result.put("msg", new Date().getTime());

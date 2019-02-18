@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.customAop.MyLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -89,16 +90,18 @@ public class ReportRestController extends BasicControllerSupport{
 	 * 获得用户
 	 * @return
 	 * http://localhost:8070/demo/showUser?id=1
+	 * MyLog--注解
 	 */
-	@RequestMapping("/showUser")
-    public String showUser(User user){
-		System.out.println("555");
+	@MyLog("测试自定义注解")
+	@RequestMapping(value = "/showUser",method = {RequestMethod.GET,RequestMethod.POST})
+    public List<User> showUser(User user){
 		System.out.println(user.getId()==null?null:user.getId());
 		if(user.getId() ==null) user.setId(1);
 		System.out.println(user.getId());
 		List<User> list = this.userService.getUsers(user);
-        String json = JSON.toJSONString(list);
-        return json;
+//        String json = JSON.toJSONString(list);
+//        return json;
+		return list;
     }
 	 
 }

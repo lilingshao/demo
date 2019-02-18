@@ -17,19 +17,19 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	private static Logger logger = LoggerFactory.getLogger(BaseDistributedLock.class);
 
 	private ZooKeeper zooKeeper;
-	private String rootPath;// ¸ùÂ·¾¶Ãû
-	private String lockNamePre;// ËøÇ°×º
-	private String currentLockPath;// ÓÃÓÚ±£´æÄ³¸ö¿Í»§¶ËÔÚlockerÏÂÃæ´´½¨³É¹¦µÄË³Ğò½Úµã£¬ÓÃÓÚºóĞøÏà¹Ø²Ù×÷Ê¹ÓÃ£¨ÈçÅĞ¶Ï£©
-	private static int MAX_RETRY_COUNT = 10;// ×î´óÖØÊÔ´ÎÊı
-	
+	private String rootPath;// æ ¹è·¯å¾„å
+	private String lockNamePre;// é”å‰ç¼€
+	private String currentLockPath;// ç”¨äºä¿å­˜æŸä¸ªå®¢æˆ·ç«¯åœ¨lockerä¸‹é¢åˆ›å»ºæˆåŠŸçš„é¡ºåºèŠ‚ç‚¹ï¼Œç”¨äºåç»­ç›¸å…³æ“ä½œä½¿ç”¨ï¼ˆå¦‚åˆ¤æ–­ï¼‰
+	private static int MAX_RETRY_COUNT = 10;// æœ€å¤§é‡è¯•æ¬¡æ•°
 
-	
+
+
 	/**
-	 * ³õÊ¼»¯¸ùÄ¿Â¼
+	 * åˆå§‹åŒ–æ ¹ç›®å½•
 	 */
 	private void init() {
 		try {
-			Stat stat = zooKeeper.exists(rootPath, false);// ÅĞ¶ÏÒ»ÏÂ¸ùÄ¿Â¼ÊÇ·ñ´æÔÚ
+			Stat stat = zooKeeper.exists(rootPath, false);// åˆ¤æ–­ä¸€ä¸‹æ ¹ç›®å½•æ˜¯å¦å­˜åœ¨
 			if (stat == null) {
 				zooKeeper.create(rootPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			}
@@ -39,8 +39,8 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * È¡µÃËøµÄÅÅĞòºÅ
-	 * 
+	 * å–å¾—é”çš„æ’åºå·
+	 *
 	 * @param str
 	 * @param lockName
 	 * @return
@@ -55,8 +55,8 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * È¡µÃËøµÄÅÅĞòÁĞ±í
-	 * 
+	 * å–å¾—é”çš„æ’åºåˆ—è¡¨
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -74,7 +74,7 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * É¾³ıËø½Úµã
+	 * åˆ é™¤é”èŠ‚ç‚¹
 	 */
 	private void deleteLockNode() {
 		try {
@@ -86,9 +86,9 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * ¸Ã·½·¨ÓÃÓÚÅĞ¶Ï×Ô¼ºÊÇ·ñ»ñÈ¡µ½ÁËËø£¬¼´×Ô¼º´´½¨µÄË³Ğò½ÚµãÔÚlockerµÄËùÓĞ×Ó½ÚµãÖĞÊÇ·ñ×îĞ¡.Èç¹ûÃ»ÓĞ»ñÈ¡µ½Ëø£¬ÔòµÈ´ıÆäËü¿Í»§¶ËËøµÄÊÍ·Å£¬
-	 * ²¢ÇÒÉÔºóÖØÊÔÖ±µ½»ñÈ¡µ½Ëø»òÕß³¬Ê±
-	 * 
+	 * è¯¥æ–¹æ³•ç”¨äºåˆ¤æ–­è‡ªå·±æ˜¯å¦è·å–åˆ°äº†é”ï¼Œå³è‡ªå·±åˆ›å»ºçš„é¡ºåºèŠ‚ç‚¹åœ¨lockerçš„æ‰€æœ‰å­èŠ‚ç‚¹ä¸­æ˜¯å¦æœ€å°.å¦‚æœæ²¡æœ‰è·å–åˆ°é”ï¼Œåˆ™ç­‰å¾…å…¶å®ƒå®¢æˆ·ç«¯é”çš„é‡Šæ”¾ï¼Œ
+	 * å¹¶ä¸”ç¨åé‡è¯•ç›´åˆ°è·å–åˆ°é”æˆ–è€…è¶…æ—¶
+	 *
 	 * @param startMillis
 	 * @param millisToWait
 	 * @param ourPath
@@ -103,35 +103,35 @@ public abstract class BaseDistributedLock implements DistributedLock {
 		try {
 			while (!haveTheLock) {
 				logger.info("get Lock Begin");
-				// ¸Ã·½·¨ÊµÏÖ»ñÈ¡locker½ÚµãÏÂµÄËùÓĞË³Ğò½Úµã£¬²¢ÇÒ´ÓĞ¡µ½´óÅÅĞò,
+				// è¯¥æ–¹æ³•å®ç°è·å–lockerèŠ‚ç‚¹ä¸‹çš„æ‰€æœ‰é¡ºåºèŠ‚ç‚¹ï¼Œå¹¶ä¸”ä»å°åˆ°å¤§æ’åº,
 				List<String> children = getSortedChildren();
 				String sequenceNodeName = currentLockPath.substring(rootPath.length() + 1);
 
-				// ¼ÆËã¸Õ²Å¿Í»§¶Ë´´½¨µÄË³Ğò½ÚµãÔÚlockerµÄËùÓĞ×Ó½ÚµãÖĞÅÅĞòÎ»ÖÃ£¬Èç¹ûÊÇÅÅĞòÎª0£¬Ôò±íÊ¾»ñÈ¡µ½ÁËËø
+				// è®¡ç®—åˆšæ‰å®¢æˆ·ç«¯åˆ›å»ºçš„é¡ºåºèŠ‚ç‚¹åœ¨lockerçš„æ‰€æœ‰å­èŠ‚ç‚¹ä¸­æ’åºä½ç½®ï¼Œå¦‚æœæ˜¯æ’åºä¸º0ï¼Œåˆ™è¡¨ç¤ºè·å–åˆ°äº†é”
 				int ourIndex = children.indexOf(sequenceNodeName);
 
 				/*
-				 * Èç¹ûÔÚgetSortedChildrenÖĞÃ»ÓĞÕÒµ½Ö®Ç°´´½¨µÄ[ÁÙÊ±]Ë³Ğò½Úµã£¬Õâ±íÊ¾¿ÉÄÜÓÉÓÚÍøÂçÉÁ¶Ï¶øµ¼ÖÂ
-				 * ZookeeperÈÏÎªÁ¬½Ó¶Ï¿ª¶øÉ¾³ıÁËÎÒÃÇ´´½¨µÄ½Úµã£¬´ËÊ±ĞèÒªÅ×³öÒì³££¬ÈÃÉÏÒ»¼¶È¥´¦Àí
-				 * ÉÏÒ»¼¶µÄ×ö·¨ÊÇ²¶»ñ¸ÃÒì³££¬²¢ÇÒÖ´ĞĞÖØÊÔÖ¸¶¨µÄ´ÎÊı ¼ûºóÃæµÄ attemptLock·½·¨
+				 * å¦‚æœåœ¨getSortedChildrenä¸­æ²¡æœ‰æ‰¾åˆ°ä¹‹å‰åˆ›å»ºçš„[ä¸´æ—¶]é¡ºåºèŠ‚ç‚¹ï¼Œè¿™è¡¨ç¤ºå¯èƒ½ç”±äºç½‘ç»œé—ªæ–­è€Œå¯¼è‡´
+				 * Zookeeperè®¤ä¸ºè¿æ¥æ–­å¼€è€Œåˆ é™¤äº†æˆ‘ä»¬åˆ›å»ºçš„èŠ‚ç‚¹ï¼Œæ­¤æ—¶éœ€è¦æŠ›å‡ºå¼‚å¸¸ï¼Œè®©ä¸Šä¸€çº§å»å¤„ç†
+				 * ä¸Šä¸€çº§çš„åšæ³•æ˜¯æ•è·è¯¥å¼‚å¸¸ï¼Œå¹¶ä¸”æ‰§è¡Œé‡è¯•æŒ‡å®šçš„æ¬¡æ•° è§åé¢çš„ attemptLockæ–¹æ³•
 				 */
 				if (ourIndex < 0) {
 					logger.error("not find node:{}", sequenceNodeName);
-					throw new Exception("½ÚµãÃ»ÓĞÕÒµ½: " + sequenceNodeName);
+					throw new Exception("èŠ‚ç‚¹æ²¡æœ‰æ‰¾åˆ°: " + sequenceNodeName);
 				}
 
-				// Èç¹ûµ±Ç°¿Í»§¶Ë´´½¨µÄ½ÚµãÔÚlocker×Ó½ÚµãÁĞ±íÖĞÎ»ÖÃ´óÓÚ0£¬±íÊ¾ÆäËü¿Í»§¶ËÒÑ¾­»ñÈ¡ÁËËø
-				// ´ËÊ±µ±Ç°¿Í»§¶ËĞèÒªµÈ´ıÆäËü¿Í»§¶ËÊÍ·ÅËø£¬
+				// å¦‚æœå½“å‰å®¢æˆ·ç«¯åˆ›å»ºçš„èŠ‚ç‚¹åœ¨lockerå­èŠ‚ç‚¹åˆ—è¡¨ä¸­ä½ç½®å¤§äº0ï¼Œè¡¨ç¤ºå…¶å®ƒå®¢æˆ·ç«¯å·²ç»è·å–äº†é”
+				// æ­¤æ—¶å½“å‰å®¢æˆ·ç«¯éœ€è¦ç­‰å¾…å…¶å®ƒå®¢æˆ·ç«¯é‡Šæ”¾é”ï¼Œ
 				boolean isGetTheLock = ourIndex == 0;
 
-				// ÈçºÎÅĞ¶ÏÆäËü¿Í»§¶ËÊÇ·ñÒÑ¾­ÊÍ·ÅÁËËø£¿´Ó×Ó½ÚµãÁĞ±íÖĞ»ñÈ¡µ½±È×Ô¼º´ÎĞ¡µÄÄÄ¸ö½Úµã£¬²¢¶ÔÆä½¨Á¢¼àÌı
+				// å¦‚ä½•åˆ¤æ–­å…¶å®ƒå®¢æˆ·ç«¯æ˜¯å¦å·²ç»é‡Šæ”¾äº†é”ï¼Ÿä»å­èŠ‚ç‚¹åˆ—è¡¨ä¸­è·å–åˆ°æ¯”è‡ªå·±æ¬¡å°çš„å“ªä¸ªèŠ‚ç‚¹ï¼Œå¹¶å¯¹å…¶å»ºç«‹ç›‘å¬
 				String pathToWatch = isGetTheLock ? null : children.get(ourIndex - 1);
 
 				if (isGetTheLock) {
 					logger.info("get the lock,currentLockPath:{}", currentLockPath);
 					haveTheLock = true;
 				} else {
-					// Èç¹û´ÎĞ¡µÄ½Úµã±»É¾³ıÁË£¬Ôò±íÊ¾µ±Ç°¿Í»§¶ËµÄ½ÚµãÓ¦¸ÃÊÇ×îĞ¡µÄÁË£¬ËùÒÔÊ¹ÓÃCountDownLatchÀ´ÊµÏÖµÈ´ı
+					// å¦‚æœæ¬¡å°çš„èŠ‚ç‚¹è¢«åˆ é™¤äº†ï¼Œåˆ™è¡¨ç¤ºå½“å‰å®¢æˆ·ç«¯çš„èŠ‚ç‚¹åº”è¯¥æ˜¯æœ€å°çš„äº†ï¼Œæ‰€ä»¥ä½¿ç”¨CountDownLatchæ¥å®ç°ç­‰å¾…
 					String previousSequencePath = rootPath.concat("/").concat(pathToWatch);
 					final CountDownLatch latch = new CountDownLatch(1);
 					final Watcher previousListener = new Watcher() {
@@ -142,10 +142,10 @@ public abstract class BaseDistributedLock implements DistributedLock {
 						}
 					};
 
-					// Èç¹û½Úµã²»´æÔÚ»á³öÏÖÒì³£
+					// å¦‚æœèŠ‚ç‚¹ä¸å­˜åœ¨ä¼šå‡ºç°å¼‚å¸¸
 					zooKeeper.exists(previousSequencePath, previousListener);
 
-					// Èç¹ûÓĞ³¬Ê±Ê±¼ä£¬¸Õµ½³¬Ê±Ê±¼ä¾Í·µ»Ø
+					// å¦‚æœæœ‰è¶…æ—¶æ—¶é—´ï¼Œåˆšåˆ°è¶…æ—¶æ—¶é—´å°±è¿”å›
 					if (millisToWait != null) {
 						millisToWait -= (System.currentTimeMillis() - startMillis);
 						startMillis = System.currentTimeMillis();
@@ -161,12 +161,12 @@ public abstract class BaseDistributedLock implements DistributedLock {
 				}
 			}
 		} catch (Exception e) {
-			// ·¢ÉúÒì³£ĞèÒªÉ¾³ı½Úµã
+			// å‘ç”Ÿå¼‚å¸¸éœ€è¦åˆ é™¤èŠ‚ç‚¹
 			logger.error("waitToLock exception", e);
 			doDelete = true;
 			throw e;
 		} finally {
-			// Èç¹ûĞèÒªÉ¾³ı½Úµã
+			// å¦‚æœéœ€è¦åˆ é™¤èŠ‚ç‚¹
 			if (doDelete) {
 				deleteLockNode();
 			}
@@ -176,15 +176,15 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * createLockNodeÓÃÓÚÔÚlocker£¨basePath³Ö¾Ã½Úµã£©ÏÂ´´½¨¿Í»§¶ËÒª»ñÈ¡ËøµÄ[ÁÙÊ±]Ë³Ğò½Úµã
-	 * 
+	 * createLockNodeç”¨äºåœ¨lockerï¼ˆbasePathæŒä¹…èŠ‚ç‚¹ï¼‰ä¸‹åˆ›å»ºå®¢æˆ·ç«¯è¦è·å–é”çš„[ä¸´æ—¶]é¡ºåºèŠ‚ç‚¹
+	 *
 	 * @param path
 	 * @return
 	 * @throws Exception
 	 */
 	private String createLockNode(String path) throws Exception {
 		Stat stat = zooKeeper.exists(rootPath, false);
-		// ÅĞ¶ÏÒ»ÏÂ¸ùÄ¿Â¼ÊÇ·ñ´æÔÚ
+		// åˆ¤æ–­ä¸€ä¸‹æ ¹ç›®å½•æ˜¯å¦å­˜åœ¨
 		if (stat == null) {
 			zooKeeper.create(rootPath, null, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		}
@@ -192,8 +192,8 @@ public abstract class BaseDistributedLock implements DistributedLock {
 	}
 
 	/**
-	 * ³¢ÊÔ»ñÈ¡Ëø£¬Èç¹û²»¼Ó³¬Ê±Ê±¼ä£¬×èÈûµÈ´ı¡£·ñÔò£¬¾ÍÊÇ¼ÓÁË³¬Ê±µÄ×èÈûµÈ´ı
-	 * 
+	 * å°è¯•è·å–é”ï¼Œå¦‚æœä¸åŠ è¶…æ—¶æ—¶é—´ï¼Œé˜»å¡ç­‰å¾…ã€‚å¦åˆ™ï¼Œå°±æ˜¯åŠ äº†è¶…æ—¶çš„é˜»å¡ç­‰å¾…
+	 *
 	 * @param time
 	 * @param unit
 	 * @return
@@ -207,7 +207,7 @@ public abstract class BaseDistributedLock implements DistributedLock {
 		boolean isDone = false;
 		int retryCount = 0;
 
-		// ÍøÂçÉÁ¶ÏĞèÒªÖØÊÔÒ»ÊÔ£¬×î´óÖØÊÔ´ÎÊıMAX_RETRY_COUNT
+		// ç½‘ç»œé—ªæ–­éœ€è¦é‡è¯•ä¸€è¯•ï¼Œæœ€å¤§é‡è¯•æ¬¡æ•°MAX_RETRY_COUNT
 		while (!isDone) {
 			isDone = true;
 			try {
